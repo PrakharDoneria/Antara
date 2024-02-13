@@ -16,12 +16,12 @@ document.addEventListener("DOMContentLoaded", function () {
     const pauseIcon = document.getElementById('pause-icon');
     const durationText = document.getElementById('duration-text');
 
-    let isPlaying = false;
+    let isPlaying = true;
     let lyricsVisible = true;
 
     // Set initial button display state
-    playIcon.style.display = 'block';
-    pauseIcon.style.display = 'none';
+    playIcon.style.display = 'none';
+    pauseIcon.style.display = 'block';
 
     playPauseButton.addEventListener('click', function () {
         togglePlay();

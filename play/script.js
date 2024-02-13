@@ -14,10 +14,14 @@ document.addEventListener("DOMContentLoaded", function () {
     const lyricsView = document.getElementById('lyrics-view');
     const playIcon = document.getElementById('play-icon');
     const pauseIcon = document.getElementById('pause-icon');
-    const durationText = document.getElementById('duration-text'); // New element
+    const durationText = document.getElementById('duration-text');
 
-    let isPlaying = true;
+    let isPlaying = false;
     let lyricsVisible = true;
+
+    // Set initial button display state
+    playIcon.style.display = 'block';
+    pauseIcon.style.display = 'none';
 
     playPauseButton.addEventListener('click', function () {
         togglePlay();
@@ -33,7 +37,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     audioPlayer.addEventListener('timeupdate', function () {
         updateProgressBar();
-        updateDurationText();
+        updateDurationText(); // Call updateDurationText here
         syncLyrics();
     });
 
@@ -61,7 +65,6 @@ document.addEventListener("DOMContentLoaded", function () {
         audioSource.src = audioUrl;
         audioThumbnail.src = thumbnailUrl;
         audioPlayer.load();
-        audioPlayer.play();
 
         if (title) {
             songNameElement.textContent = title;
@@ -132,6 +135,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const progress = (currentTime / duration) * 100;
         progressBar.value = progress;
         currentDuration.textContent = formatTime(currentTime);
+        totalDuration.textContent = formatTime(duration);
     }
 
     function updateCurrentDuration() {
@@ -147,6 +151,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const duration = audioPlayer.duration;
         const currentTime = (progress / 100) * duration;
         audioPlayer.currentTime = currentTime;
+        currentDuration.textContent = formatTime(currentTime);
     }
 
     function setTotalDuration() {

@@ -14,44 +14,47 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // Function to perform search and display results
     function performSearch(query) {
-        const apiKey = '9c9e247ac8efad7cf0fddc05e0d7223c';
-        const apiUrlArtist = `http://ws.audioscrobbler.com/2.0/?method=artist.search&artist=${query}&api_key=${apiKey}&format=json`;
-        const apiUrlTrack = `http://ws.audioscrobbler.com/2.0/?method=track.search&track=${query}&api_key=${apiKey}&format=json`;
+        const apiUrl = `https://antara.deno.dev/search?q=${query}`;
 
-        // Fetch artist recommendations
-        fetch(apiUrlArtist)
+        fetch(apiUrl)
             .then(response => response.json())
             .then(data => {
-                const artistResults = data.results.artistmatches.artist;
-                displayResults(artistResults);
+                const searchResults = data.result;
+                searchResultsList.innerHTML = ""; // Clear previous results
+
+                searchResults.forEach(result => {
+                    const listItem = document.createElement("li");
+                    const thumbnail = document.createElement("img");
+                    thumbnail.src = result.thumbnail;
+                    listItem.appendChild(thumbnail);
+
+                    const title = document.createElement("span");
+                    title.textContent = sanitizeText(result.title);
+                    listItem.appendChild(title);
+
+                    const author = document.createElement("span");
+                    author.textContent = sanitizeText(result.author);
+                    listItem.appendChild(author);
+
+                    // Add onclick event listener to each search result item
+                    listItem.addEventListener('click', function() {
+                        const audioId = result.videoId;
+                        const title = encodeURIComponent(result.title);
+                        const author = encodeURIComponent(result.author);
+                        window.location.href = `play?title=${title}&author=${author}&audioId=${audioId}`;
+                    });
+
+                    searchResultsList.appendChild(listItem);
+                });
             })
             .catch(error => {
-                console.error("Error fetching artist recommendations:", error);
+                console.error("Error fetching search results:", error);
             });
+    }
 
-        // Fetch track recommendations
-        fetch(apiUrlTrack)
-            .then(response => response.json())
-            .then(data => {
-                const trackResults = data.results.trackmatches.track;
-                displayResults(trackResults);
-            })
-            .catch(error => {
-                console.error("Error fetching track recommendations:", error);
-            });
-
-        // Function to display search results
-        function displayResults(results) {
-            searchResultsList.innerHTML = ""; // Clear previous results
-
-            results.forEach(result => {
-                const listItem = document.createElement("li");
-                const title = document.createElement("span");
-                title.textContent = result.name; // Assuming the API response includes a 'name' field for both artists and tracks
-                listItem.appendChild(title);
-                searchResultsList.appendChild(listItem);
-            });
-        }
+    // Function to sanitize text and replace special characters with HTML entities
+    function sanitizeText(text) {
+        return text.replace(/\n/g, '<br>').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
     }
 
     // Get search query from URL and perform search
@@ -65,17 +68,10 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     // Event listener for input field
-    searchInput.addEventListener('input', function() {
-        const query = searchInput.value;
-        performSearch(query);
-    });
-
-    // Event listener for click on search result item
-    document.getElementById('search-results').addEventListener('click', function(event) {
-        if (event.target && event.target.nodeName === 'SPAN') {
-            const selectedItem = event.target.textContent;
-            searchInput.value = selectedItem;
-            performSearch(selectedItem);
+    searchInput.addEventListener('keydown', function(event) {
+        if (event.keyCode === 13 || event.keyCode === 10) { // Enter key code or newline key code
+            const query = searchInput.value;
+            performSearch(query);
         }
     });
 });

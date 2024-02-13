@@ -5,18 +5,18 @@ document.addEventListener("DOMContentLoaded", function () {
     const playPauseButton = document.getElementById('play-pause-button');
     const previousButton = document.getElementById('previous-button');
     const nextButton = document.getElementById('next-button');
-    const backward10Button = document.getElementById('backward-10-button');
-    const forward10Button = document.getElementById('forward-10-button');
     const progressBar = document.getElementById('progress-bar');
+    const playImg = document.getElementById('play-img');
+    const pauseImg = document.getElementById('pause-img');
+    const songNameElement = document.getElementById('song-name');
+    const artistNameElement = document.getElementById('artist-name');
+    const backgroundOverlay = document.getElementById('background-overlay');
     const currentDuration = document.getElementById('current-duration');
     const totalDuration = document.getElementById('total-duration');
     const lyricsView = document.getElementById('lyrics-view');
-    const lyricsContainer = document.getElementById('lyrics-container');
-    const lyricsToggleButton = document.getElementById('lyrics-toggle-button');
-    const backgroundOverlay = document.getElementById('background-overlay');
 
     let isPlaying = false;
-    let lyricsVisible = true; // Set to true to show lyrics by default
+    let lyricsVisible = true;
 
     playPauseButton.addEventListener('click', function () {
         togglePlay();
@@ -30,17 +30,9 @@ document.addEventListener("DOMContentLoaded", function () {
         fetchPreviousOrNextAudio('next');
     });
 
-    backward10Button.addEventListener('click', function () {
-        backward10Seconds();
-    });
-
-    forward10Button.addEventListener('click', function () {
-        forward10Seconds();
-    });
-
     audioPlayer.addEventListener('timeupdate', function () {
         updateProgressBar();
-        updateCurrentDuration();
+        syncLyrics();
     });
 
     progressBar.addEventListener('input', function () {
@@ -69,22 +61,27 @@ document.addEventListener("DOMContentLoaded", function () {
         audioPlayer.load();
 
         if (title) {
-            document.getElementById('song-name').textContent = title;
+            songNameElement.textContent = title;
         }
 
         if (author) {
-            document.getElementById('artist-name').textContent = author;
+            artistNameElement.textContent = author;
         }
 
+        backgroundOverlay.style.backgroundImage = `url('${thumbnailUrl}')`;
+
         fetchLyrics(author, title);
-        setBackgroundOverlay(thumbnailUrl);
     }
 
     function togglePlay() {
         if (isPlaying) {
             audioPlayer.pause();
+            playImg.style.display = 'block';
+            pauseImg.style.display = 'none';
         } else {
             audioPlayer.play();
+            playImg.style.display = 'none';
+            pauseImg.style.display = 'block';
         }
         isPlaying = !isPlaying;
     }
@@ -107,15 +104,16 @@ document.addEventListener("DOMContentLoaded", function () {
                     const nextAuthor = data[0].author;
 
                     if (nextTitle) {
-                        document.getElementById('song-name').textContent = nextTitle;
+                        songNameElement.textContent = nextTitle;
                     }
 
                     if (nextAuthor) {
-                        document.getElementById('artist-name').textContent = nextAuthor;
+                        artistNameElement.textContent = nextAuthor;
                     }
 
+                    backgroundOverlay.style.backgroundImage = `url('${nextThumbnailUrl}')`;
+
                     fetchLyrics(nextAuthor, nextTitle);
-                    setBackgroundOverlay(nextThumbnailUrl);
                 } else {
                     console.log(`No ${direction} audio available.`);
                 }
@@ -125,33 +123,20 @@ document.addEventListener("DOMContentLoaded", function () {
             });
     }
 
-    function backward10Seconds() {
-        audioPlayer.currentTime -= 10;
-    }
-
-    function forward10Seconds() {
-        audioPlayer.currentTime += 10;
-    }
-
     function updateProgressBar() {
         const currentTime = audioPlayer.currentTime;
         const duration = audioPlayer.duration;
         const progress = (currentTime / duration) * 100;
         progressBar.value = progress;
         currentDuration.textContent = formatTime(currentTime);
-
-        const remainingTime = duration - currentTime;
-        totalDuration.textContent = '-' + formatTime(remainingTime); // Display remaining time
     }
 
     function updateCurrentDuration() {
         const progress = progressBar.value;
         const duration = audioPlayer.duration;
         const currentTime = (progress / 100) * duration;
+        audioPlayer.currentTime = currentTime;
         currentDuration.textContent = formatTime(currentTime);
-
-        const remainingTime = duration - currentTime;
-        totalDuration.textContent = '-' + formatTime(remainingTime); // Display remaining time
     }
 
     function seekToPosition() {
@@ -163,7 +148,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function setTotalDuration() {
         const duration = audioPlayer.duration;
-        totalDuration.textContent = '-' + formatTime(duration); // Display total duration
+        totalDuration.textContent = formatTime(duration);
     }
 
     function formatTime(time) {
@@ -187,7 +172,22 @@ document.addEventListener("DOMContentLoaded", function () {
             });
     }
 
-    function setBackgroundOverlay(imageUrl) {
-        backgroundOverlay.style.backgroundImage = `url('${imageUrl}')`;
+    function syncLyrics() {
+        const currentTime = audioPlayer.currentTime;
+        const lines = lyricsView.textContent.split('\n');
+        for (let i = 0; i < lines.length; i++) {
+            const line = lines[i];
+            const timeMatch = line.match(/\[(\d+):(\d+)\]/);
+            if (timeMatch) {
+                const minutes = parseInt(timeMatch[1]);
+                const seconds = parseInt(timeMatch[2]);
+                const lineTime = minutes * 60 + seconds;
+                if (lineTime > currentTime) {
+                    const prevLine = i > 0 ? lines[i - 1] : '';
+                    lyricsView.innerHTML = `<span class="prev-line">${prevLine}</span><span class="current-line">${line}</span><span class="next-line">${lines[i + 1]}</span>`;
+                    break;
+                }
+            }
+        }
     }
 });

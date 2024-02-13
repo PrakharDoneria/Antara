@@ -7,9 +7,8 @@
 
 /* Body styles */
 body {
-    margin: 0;
-    padding: 0;
-    background-color: #1a1a1a;
+    background-color: #000;
+    font-family: 'Salsa', sans-serif;
 }
 
 /* Audio container styles */
@@ -32,13 +31,6 @@ body {
     background-size: cover;
     background-position: center;
     filter: blur(10px);
-    animation: fadeInOut 10s infinite alternate;
-}
-
-@keyframes fadeInOut {
-    0% { opacity: 0; }
-    50% { opacity: 1; }
-    100% { opacity: 0; }
 }
 
 /* Audio details styles */
@@ -51,6 +43,7 @@ body {
     flex-direction: column;
     text-align: center;
     margin-bottom: 20px;
+    color: #fff;
 }
 
 #audio-thumbnail {
@@ -62,12 +55,12 @@ body {
 
 #song-name {
     margin: 0;
-    color: #fff;
+    font-size: 24px;
 }
 
 #artist-name {
     margin: 0;
-    color: #fff;
+    font-size: 18px;
 }
 
 /* Player controls styles */
@@ -106,6 +99,7 @@ body {
     justify-content: space-between;
     color: #fff;
     margin-top: 5px;
+    font-size: 14px;
 }
 
 /* Lyrics view styles */
@@ -122,29 +116,13 @@ body {
     overflow-y: auto;
     transition: max-height 0.5s ease-in-out;
     transform: translateY(100%);
-}
-
-#lyrics-toggle-button {
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: rgba(0, 0, 0, 0.5);
-    color: #fff;
-    padding: 10px;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: transform 0.3s ease-in-out;
-}
-
-#lyrics-toggle-button:hover {
-    transform: translateY(-5px);
-}
-
-.lyrics-visible #lyrics-toggle-button {
-    transform: translateY(-100%);
+    font-size: 16px;
 }
 
 .lyrics-visible #lyrics-view {
     transform: translateY(0);
+}
+
+.lyrics-visible #background-overlay {
+    filter: blur(10px) brightness(70%);
 }

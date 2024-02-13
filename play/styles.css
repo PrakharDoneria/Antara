@@ -85,7 +85,7 @@ body {
 #progress-bar {
     -webkit-appearance: none;
     appearance: none;
-    width: 80%;
+    width: 300px; /* Adjust width as needed */
     height: 5px;
     background-color: #535353;
     border-radius: 10px;
@@ -102,14 +102,32 @@ body {
 
 /* Lyrics view styles */
 #lyrics-view {
-    position: relative;
+    position: absolute;
+    bottom: -200px; /* Adjust initial position */
+    left: 50%;
+    transform: translateX(-50%);
     z-index: 1;
-    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    background-color: rgba(0, 0, 0, 0.8);
     color: #fff;
     padding: 20px;
     border-radius: 10px;
     max-width: 80%;
-    margin-top: 20px;
     overflow-y: auto;
-    max-height: 200px;
+    transition: bottom 0.3s ease; /* Add smooth transition */
+}
+
+.lyrics-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1;
+    background-color: rgba(255, 255, 255, 0.8);
+    color: #000;
+    padding: 10px 20px;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.lyrics-button:hover {
+    background-color: rgba(255, 255, 255, 1);
 }

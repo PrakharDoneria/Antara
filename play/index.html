@@ -1,14 +1,14 @@
-<!DOCTYPE HTML>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>playClass</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Salsa&display=swap">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <title>Antara Player</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Salsa&display=swap">
 </head>
-<body style="margin: 0; padding: 0; background-color: #1a1a1a; font-family: 'Salsa', sans-serif;">
+<body>
+
 <div class="audio-container">
     <div id="background-overlay"></div>
     <div id="audio-details">
@@ -17,25 +17,27 @@
         <p id="artist-name">Artist Name</p>
     </div>
     <div id="player-controls">
-        <button id="previous-button" class="material-icons control-button">skip_previous</button>
-        <button id="play-pause-button" class="material-icons control-button">play_circle_filled</button>
-        <button id="next-button" class="material-icons control-button">skip_next</button>
+        <button id="previous-button" class="control-button">Previous</button>
+        <button id="play-pause-button" class="control-button">
+            <img id="play-img" src="https://firebasestorage.googleapis.com/v0/b/asocial-16d14.appspot.com/o/asocial_cloud%2Fic_play_circle_fill_black_24dp.png?alt=media&token=5683b0d6-73d1-4a8e-acce-85b326275e30" alt="Play">
+            <img id="pause-img" src="https://firebasestorage.googleapis.com/v0/b/asocial-16d14.appspot.com/o/asocial_cloud%2Fic_pause_circle_fill_black_24dp.png?alt=media&token=b575fa16-1987-4e51-913c-6b825d456f94" alt="Pause" style="display: none;">
+        </button>
+        <button id="next-button" class="control-button">Next</button>
     </div>
-    <div>
-        <input type="range" id="progress-bar" class="progress-bar" min="0" max="100" value="0">
-        <div id="duration-text">
-            <span id="current-duration">0:00</span>
-            <span id="total-duration">0:00</span>
-        </div>
+    <input type="range" id="progress-bar" class="progress-bar" min="0" max="100" value="0">
+    <div id="duration-text">
+        <span id="current-duration">0:00</span>
+        <span id="total-duration">0:00</span>
     </div>
-    <audio id="audio-player" autoplay style="display: none;">
-        <source id="audio-source" src="" type="audio/mpeg">
-        Your browser does not support the audio tag.
-    </audio>
+    <div id="lyrics-view"></div>
+    <div class="lyrics-button" id="toggle-lyrics-button">Show Lyrics</div>
 </div>
-<div id="lyrics-view">
-    
-</div>
+
+<audio id="audio-player" autoplay>
+    <source id="audio-source" src="" type="audio/mpeg">
+    Your browser does not support the audio tag.
+</audio>
+
 <script src="script.js"></script>
 </body>
 </html>

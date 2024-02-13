@@ -153,20 +153,18 @@ document.addEventListener("DOMContentLoaded", function () {
         return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
     }
 
-      function fetchLyrics(artist, title) {
-          fetch(`https://api.lyrics.ovh/v1/${artist}/${title}`)
-              .then(response => response.json())
-              .then(data => {
-                  if (data.lyrics) {
-                      lyricsView.textContent = data.lyrics;
-                  } else {
-                      lyricsView.textContent = "Lyrics not found.";
-                  }
-              })
-              .catch(error => {
-                  console.error('Error fetching lyrics:', error);
-              });
-      }
-
-    
+    function fetchLyrics(artist, title) {
+        fetch(`https://api.lyrics.ovh/v1/${artist}/${title}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.lyrics) {
+                    lyricsView.textContent = data.lyrics;
+                } else {
+                    lyricsView.textContent = "Lyrics not found.";
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching lyrics:', error);
+            });
+    }
 });

@@ -13,6 +13,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const backgroundOverlay = document.getElementById('background-overlay');
     const currentDuration = document.getElementById('current-duration');
     const totalDuration = document.getElementById('total-duration');
+    const lyricsView = document.getElementById('lyrics-view');
 
     let isPlaying = false;
 
@@ -90,6 +91,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // Set background image and blur effect
         backgroundOverlay.style.backgroundImage = `url('${thumbnailUrl}')`;
+
+        // Fetch lyrics
+        fetchLyrics(author, title);
     }
 
     function fetchPreviousOrNextAudio(direction) {
@@ -119,6 +123,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
                     // Update background image and blur effect
                     backgroundOverlay.style.backgroundImage = `url('${nextThumbnailUrl}')`;
+
+                    // Fetch lyrics
+                    fetchLyrics(nextAuthor, nextTitle);
                 } else {
                     console.log(`No ${direction} audio available.`);
                 }
@@ -132,5 +139,28 @@ document.addEventListener("DOMContentLoaded", function () {
         const minutes = Math.floor(time / 60);
         const seconds = Math.floor(time % 60);
         return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+    }
+
+    function fetchLyrics(artist, title) {
+        const apiKey = '9e7e11749a9fbba1ea9c7adef4b11ab3'; 
+        const apiUrl = `https://api.musixmatch.com/ws/1.1/matcher.lyrics.get?format=json&apikey=${apiKey}&q_artist=${encodeURIComponent(artist)}&q_track=${encodeURIComponent(title)}`;
+
+        fetch(apiUrl)
+            .then(response => response.json())
+            .then(data => {
+                if (data.message.body.lyrics) {
+                    const lyrics = data.message.body.lyrics.lyrics_body;
+                    displayLyrics(lyrics);
+                } else {
+                    console.log('Lyrics not found');
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching lyrics:', error);
+            });
+    }
+
+    function displayLyrics(lyrics) {
+        lyricsView.textContent = lyrics;
     }
 });

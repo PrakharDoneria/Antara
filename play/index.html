@@ -4,26 +4,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>playClass</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Salsa&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="styles.css">
 </head>
-<body style="margin: 0; padding: 0; background-color: #1a1a1a;">
-<div class="audio-container" style="position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh;">
-    <div id="background-overlay" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-size: cover; background-position: center; filter: blur(10px);"></div>
-    <div id="audio-details" style="position: relative; z-index: 1; display: flex; align-items: center; justify-content: center; flex-direction: column; text-align: center; margin-bottom: 20px;">
-        <img id="audio-thumbnail" src="https://via.placeholder.com/150" alt="Song Thumbnail" style="width: 300px; height: 300px; border-radius: 10px; margin-bottom: 20px;">
-        <h3 id="song-name" style="margin: 0; color: #fff;">Song Name</h3>
-        <p id="artist-name" style="margin: 0; color: #fff;">Artist Name</p>
+<body style="margin: 0; padding: 0; background-color: #1a1a1a; font-family: 'Salsa', sans-serif;">
+<div class="audio-container">
+    <div id="background-overlay"></div>
+    <div id="audio-details">
+        <img id="audio-thumbnail" src="https://via.placeholder.com/150" alt="Song Thumbnail">
+        <h3 id="song-name">Song Name</h3>
+        <p id="artist-name">Artist Name</p>
     </div>
-    <div id="player-controls" style="position: relative; z-index: 1; display: flex; align-items: center; justify-content: center;">
-        <button id="previous-button" class="control-button" style="background-color: transparent; border: none; cursor: pointer; margin-right: 10px; color: #fff;">Previous</button>
-        <button id="play-pause-button" class="control-button" style="background-color: transparent; border: none; cursor: pointer; margin-right: 10px;">
-            <img id="play-img" src="https://firebasestorage.googleapis.com/v0/b/asocial-16d14.appspot.com/o/asocial_cloud%2Fic_play_circle_fill_black_24dp.png?alt=media&token=5683b0d6-73d1-4a8e-acce-85b326275e30" alt="Play" style="display: block;">
-            <img id="pause-img" src="https://firebasestorage.googleapis.com/v0/b/asocial-16d14.appspot.com/o/asocial_cloud%2Fic_pause_circle_fill_black_24dp.png?alt=media&token=b575fa16-1987-4e51-913c-6b825d456f94" alt="Pause" style="display: none;">
-        </button>
-        <button id="next-button" class="control-button" style="background-color: transparent; border: none; cursor: pointer; margin-left: 10px; color: #fff;">Next</button>
+    <div id="player-controls">
+        <button id="previous-button" class="material-icons control-button">skip_previous</button>
+        <button id="play-pause-button" class="material-icons control-button">play_circle_filled</button>
+        <button id="next-button" class="material-icons control-button">skip_next</button>
     </div>
-    <div style="position: relative; z-index: 1; width: 80%;">
-        <input type="range" id="progress-bar" class="progress-bar" min="0" max="100" value="0" style="-webkit-appearance: none; appearance: none; height: 5px; background-color: #535353; border-radius: 10px; outline: none; margin-top: 20px; width: 100%;">
-        <div id="duration-text" style="display: flex; justify-content: space-between; color: #fff; margin-top: 5px;">
+    <div>
+        <input type="range" id="progress-bar" class="progress-bar" min="0" max="100" value="0">
+        <div id="duration-text">
             <span id="current-duration">0:00</span>
             <span id="total-duration">0:00</span>
         </div>
@@ -33,135 +33,9 @@
         Your browser does not support the audio tag.
     </audio>
 </div>
-
-<script>
-    // JavaScript code
-    document.addEventListener("DOMContentLoaded", function() {
-        const audioPlayer = document.getElementById('audio-player');
-        const audioSource = document.getElementById('audio-source');
-        const audioThumbnail = document.getElementById('audio-thumbnail');
-        const playPauseButton = document.getElementById('play-pause-button');
-        const previousButton = document.getElementById('previous-button');
-        const nextButton = document.getElementById('next-button');
-        const progressBar = document.getElementById('progress-bar');
-        const playImg = document.getElementById('play-img');
-        const pauseImg = document.getElementById('pause-img');
-        const songNameElement = document.getElementById('song-name');
-        const artistNameElement = document.getElementById('artist-name');
-        const backgroundOverlay = document.getElementById('background-overlay');
-        const currentDuration = document.getElementById('current-duration');
-        const totalDuration = document.getElementById('total-duration');
-
-        let isPlaying = false;
-
-        playPauseButton.addEventListener('click', function() {
-            if (isPlaying) {
-                audioPlayer.pause();
-                playImg.style.display = 'block';
-                pauseImg.style.display = 'none';
-            } else {
-                audioPlayer.play();
-                playImg.style.display = 'none';
-                pauseImg.style.display = 'block';
-            }
-            isPlaying = !isPlaying;
-        });
-
-        previousButton.addEventListener('click', function() {
-            // Fetch previous audio
-            fetchPreviousOrNextAudio('previous');
-        });
-
-        nextButton.addEventListener('click', function() {
-            // Fetch next audio
-            fetchPreviousOrNextAudio('next');
-        });
-
-        audioPlayer.addEventListener('timeupdate', function() {
-            const currentTime = audioPlayer.currentTime;
-            const duration = audioPlayer.duration;
-            const progress = (currentTime / duration) * 100;
-            progressBar.value = progress;
-
-            // Update current duration text
-            currentDuration.textContent = formatTime(currentTime);
-        });
-
-        progressBar.addEventListener('input', function() {
-            const progress = progressBar.value;
-            const duration = audioPlayer.duration;
-            const currentTime = (progress / 100) * duration;
-            audioPlayer.currentTime = currentTime;
-        });
-
-        const urlParams = new URLSearchParams(window.location.search);
-        const audioId = urlParams.get('audioId');
-        const title = urlParams.get('title');
-        const author = urlParams.get('author');
-
-        if (audioId) {
-            const audioUrl = `https://paxsenixjs.deno.dev/download?id=${audioId}&type=audio`;
-            const thumbnailUrl = `https://paxsenixjs.deno.dev/thumbnailHD?id=${audioId}`;
-
-            audioSource.src = audioUrl;
-            audioThumbnail.src = thumbnailUrl;
-            audioPlayer.load();
-
-            if (title) {
-                songNameElement.textContent = title;
-            }
-
-            if (author) {
-                artistNameElement.textContent = author;
-            }
-
-            // Set background image and blur effect
-            backgroundOverlay.style.backgroundImage = `url('${thumbnailUrl}')`;
-        }
-
-        function fetchPreviousOrNextAudio(direction) {
-            fetch(`https://antara.deno.dev/${direction}?id=${audioId}`)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.length > 0) {
-                        const nextAudioId = data[0].videoId;
-                        const nextAudioUrl = `https://paxsenixjs.deno.dev/download?id=${nextAudioId}&type=audio`;
-                        const nextThumbnailUrl = data[0].thumbnail;
-
-                        audioSource.src = nextAudioUrl;
-                        audioThumbnail.src = nextThumbnailUrl;
-                        audioPlayer.load();
-                        audioPlayer.play();
-
-                        const nextTitle = data[0].title;
-                        const nextAuthor = data[0].author;
-
-                        if (nextTitle) {
-                            songNameElement.textContent = nextTitle;
-                        }
-
-                        if (nextAuthor) {
-                            artistNameElement.textContent = nextAuthor;
-                        }
-
-                        // Update background image and blur effect
-                        backgroundOverlay.style.backgroundImage = `url('${nextThumbnailUrl}')`;
-                    } else {
-                        console.log(`No ${direction} audio available.`);
-                    }
-                })
-                .catch(error => {
-                    console.error(`Error fetching ${direction} audio:`, error);
-                });
-        }
-
-        function formatTime(time) {
-            const minutes = Math.floor(time / 60);
-            const seconds = Math.floor(time % 60);
-            return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-        }
-    });
-</script>
-
+<div id="lyrics-view">
+    
+</div>
+<script src="script.js"></script>
 </body>
 </html>

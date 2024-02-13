@@ -1,12 +1,17 @@
-/* CSS styles */
-body {
-    font-family: 'Salsa', sans-serif;
-    background-color: #121212;
-    color: #fff;
+/* Reset default margin and padding */
+* {
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
 }
 
+/* Body styles */
+body {
+    background-color: #1a1a1a;
+    font-family: 'Salsa', sans-serif;
+}
+
+/* Audio container styles */
 .audio-container {
     position: relative;
     display: flex;
@@ -16,6 +21,7 @@ body {
     height: 100vh;
 }
 
+/* Background overlay styles */
 #background-overlay {
     position: absolute;
     top: 0;
@@ -24,20 +30,10 @@ body {
     height: 100%;
     background-size: cover;
     background-position: center;
-    backdrop-filter: blur(10px); /* Apply blur effect to the background */
-    opacity: 0; /* Initial opacity set to 0 */
-    animation: fadeBackground 10s infinite; /* Adjust duration as needed */
+    filter: blur(10px);
 }
 
-@keyframes fadeBackground {
-    0%, 100% {
-        opacity: 0;
-    }
-    50% {
-        opacity: 1;
-    }
-}
-
+/* Audio details styles */
 #audio-details {
     position: relative;
     z-index: 1;
@@ -56,16 +52,24 @@ body {
     margin-bottom: 20px;
 }
 
-#song-name, #artist-name {
+#song-name {
     margin: 0;
+    color: #fff;
 }
 
+#artist-name {
+    margin: 0;
+    color: #fff;
+}
+
+/* Player controls styles */
 #player-controls {
     position: relative;
     z-index: 1;
     display: flex;
     align-items: center;
     justify-content: center;
+    margin-bottom: 20px;
 }
 
 .control-button {
@@ -77,36 +81,35 @@ body {
     margin: 0 10px;
 }
 
-.progress-bar {
+/* Progress bar styles */
+#progress-bar {
     -webkit-appearance: none;
     appearance: none;
+    width: 80%;
     height: 5px;
     background-color: #535353;
     border-radius: 10px;
     outline: none;
-    width: 80%;
-    margin-top: 20px;
 }
 
+/* Duration text styles */
 #duration-text {
     display: flex;
     justify-content: space-between;
     color: #fff;
-    width: 80%;
     margin-top: 5px;
 }
 
-.lyrics-container {
-    text-align: center;
-    margin-top: 50px;
-}
-
-.lyrics-container h2 {
-    color: #1DB954;
-}
-
-.lyrics-content {
+/* Lyrics view styles */
+#lyrics-view {
+    position: relative;
+    z-index: 1;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
     color: #fff;
-    font-size: 18px;
-    line-height: 1.5;
+    padding: 20px;
+    border-radius: 10px;
+    max-width: 80%;
+    margin-top: 20px;
+    overflow-y: auto;
+    max-height: 200px;
 }

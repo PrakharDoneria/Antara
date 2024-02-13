@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const nextButton = document.getElementById('next-button');
     const progressBar = document.getElementById('progress-bar');
     const songNameElement = document.getElementById('song-name');
-    const artistNameElement = document.getElementById('artist-name'); 
+    const artistNameElement = document.getElementById('artist-name');
     const backgroundOverlay = document.getElementById('background-overlay');
     const currentDuration = document.getElementById('current-duration');
     const totalDuration = document.getElementById('total-duration');
@@ -202,6 +202,53 @@ document.addEventListener("DOMContentLoaded", function () {
                     lyricsView.innerHTML = `<span class="prev-line">${prevLine}</span><span class="current-line">${line}</span><span class="next-line">${lines[i + 1]}</span>`;
                     break;
                 }
+            }
+        }
+    }
+
+    function showNotification(title, artist, imageUrl) {
+        if (!("Notification" in window)) {
+            alert("This browser does not support desktop notification");
+        } else if (Notification.permission === "granted") {
+            displayNotification(title, artist, imageUrl);
+        } else if (Notification.permission !== 'denied') {
+            Notification.requestPermission().then(function (permission) {
+                if (permission === "granted") {
+                    displayNotification(title, artist, imageUrl);
+                }
+            });
+        }
+    }
+
+    function displayNotification(title, artist, imageUrl) {
+        var notification = new Notification(title, {
+            body: artist,
+            icon: imageUrl,
+            actions: [
+                { action: 'play', title: 'Play' },
+                { action: 'pause', title: 'Pause' },
+                { action: 'next', title: 'Next' }
+            ]
+        });
+
+        notification.onclick = function (event) {
+            // Handle notification click event
+        }
+
+        notification.onaction = function (event) {
+            // Handle notification button click event
+            switch (event.action) {
+                case 'play':
+                    togglePlay();
+                    break;
+                case 'pause':
+                    togglePlay();
+                    break;
+                case 'next':
+                    fetchPreviousOrNextAudio('next');
+                    break;
+                default:
+                    console.log("Unknown action clicked");
             }
         }
     }

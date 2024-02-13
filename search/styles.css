@@ -4,29 +4,17 @@
 /* Import Material 3 UI styles */
 @import url('https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700|Roboto:wght@400;500;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Material+Icons&display=block');
-@import url('https://fonts.googleapis.com/css2?family=Material+Icons+Outlined&display=block');
-@import url('https://fonts.googleapis.com/css2?family=Material+Icons+Round&display=block');
-@import url('https://fonts.googleapis.com/css2?family=Material+Icons+Sharp&display=block');
-@import url('https://fonts.googleapis.com/css2?family=Material+Icons+Two+Tone&display=block');
-@import url('https://fonts.googleapis.com/css2?family=Google+Material+Icons&display=block');
-@import url('https://fonts.googleapis.com/css2?family=Google+Material+Icons+Outlined&display=block');
-@import url('https://fonts.googleapis.com/css2?family=Google+Material+Icons+Round&display=block');
-@import url('https://fonts.googleapis.com/css2?family=Google+Material+Icons+Sharp&display=block');
-@import url('https://fonts.googleapis.com/css2?family=Google+Material+Icons+Two+Tone&display=block');
-@import url('https://fonts.googleapis.com/css2?family=Material+Icons+Outline&display=block');
-@import url('https://fonts.googleapis.com/css2?family=Material+Icons+Sharp&display=block');
-@import url('https://fonts.googleapis.com/css2?family=Material+Icons+Twotone&display=block');
-
 
 /* Custom CSS styles */
 body {
     font-family: 'Salsa', sans-serif; /* Set font-family to Salsa */
     margin: 0;
     padding: 0;
+    background-color: #f3f3f3; /* Light gray background color */
 }
 
 h2 {
-    color: #333;
+    color: #333; /* Dark gray text color */
     text-align: center;
     margin-top: 20px;
 }
@@ -43,14 +31,20 @@ h2 {
 #search-results li {
     margin: 10px;
     padding: 10px;
-    border: 1px solid #ccc;
+    border: 1px solid #ccc; /* Light gray border */
     border-radius: 5px;
-    background-color: #f9f9f9;
+    background-color: #fff; /* White background */
     width: 200px;
     display: flex;
     flex-direction: column;
     align-items: center;
     cursor: pointer; /* Add cursor pointer */
+    transition: all 0.3s ease; /* Smooth transition */
+}
+
+#search-results li:hover {
+    transform: translateY(-5px); /* Lift the item on hover */
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Add shadow on hover */
 }
 
 #search-results li img {
@@ -61,15 +55,20 @@ h2 {
 }
 
 #search-results li span {
-    color: #333;
+    color: #333; /* Dark gray text color */
     text-align: center;
+    font-size: 16px;
 }
 
 #search-input {
     width: 100%;
     padding: 10px;
     margin-bottom: 20px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+    border: none;
+    border-radius: 20px;
+    background-color: #fff; /* White background */
+    color: #333; /* Dark gray text color */
+    font-size: 16px;
+    outline: none;
     box-sizing: border-box;
 }

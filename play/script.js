@@ -14,8 +14,9 @@ document.addEventListener("DOMContentLoaded", function () {
     const lyricsView = document.getElementById('lyrics-view');
     const playIcon = document.getElementById('play-icon');
     const pauseIcon = document.getElementById('pause-icon');
+    const durationText = document.getElementById('duration-text'); // New element
 
-    let isPlaying = false;
+    let isPlaying = true;
     let lyricsVisible = true;
 
     playPauseButton.addEventListener('click', function () {
@@ -32,6 +33,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     audioPlayer.addEventListener('timeupdate', function () {
         updateProgressBar();
+        updateDurationText();
         syncLyrics();
     });
 
@@ -59,6 +61,7 @@ document.addEventListener("DOMContentLoaded", function () {
         audioSource.src = audioUrl;
         audioThumbnail.src = thumbnailUrl;
         audioPlayer.load();
+        audioPlayer.play();
 
         if (title) {
             songNameElement.textContent = title;

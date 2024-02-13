@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const nextButton = document.getElementById('next-button');
     const progressBar = document.getElementById('progress-bar');
     const songNameElement = document.getElementById('song-name');
-    const artistNameElement = document.getElementById('artist-name');
+    const artistNameElement = document.getElementById('artist-name'); 
     const backgroundOverlay = document.getElementById('background-overlay');
     const currentDuration = document.getElementById('current-duration');
     const totalDuration = document.getElementById('total-duration');

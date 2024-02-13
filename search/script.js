@@ -37,12 +37,12 @@ document.addEventListener("DOMContentLoaded", function() {
                     listItem.appendChild(author);
 
                     // Add onclick event listener to each search result item
-                    listItem.addEventListener('click', function() {
-                        const audioId = result.videoId;
-                        const title = encodeURIComponent(result.title);
-                        const author = encodeURIComponent(result.author);
-                        window.location.href = `play?title=${title}&author=${author}&audioId=${audioId}`;
-                    });
+                  listItem.addEventListener('click', function() {
+                      const audioId = result.videoId;
+                      const title = encodeURIComponent(result.title);
+                      const author = encodeURIComponent(result.author);
+                      window.location.href = `play?title=${title}&author=${author}&audioId=${audioId}`;
+                  });
 
                     searchResultsList.appendChild(listItem);
                 });

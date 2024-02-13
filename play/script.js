@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const nextButton = document.getElementById('next-button');
     const progressBar = document.getElementById('progress-bar');
     const songNameElement = document.getElementById('song-name');
-    const artistNameElement = document.getElementById('artist-name');
+    const artistNameElement = document.getElementById('artist-name'); 
     const backgroundOverlay = document.getElementById('background-overlay');
     const currentDuration = document.getElementById('current-duration');
     const totalDuration = document.getElementById('total-duration');
@@ -37,9 +37,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
     audioPlayer.addEventListener('timeupdate', function () {
         updateProgressBar();
-        updateDurationText(); // Call updateDurationText here
+        updateDurationText();
         syncLyrics();
-        // Store current playback position in localStorage
         localStorage.setItem('audioPlaybackPosition', audioPlayer.currentTime);
     });
 
@@ -53,7 +52,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     audioPlayer.addEventListener('loadedmetadata', function () {
         setTotalDuration();
-        // Check if there's a stored playback position and resume playback from that position
         const storedPlaybackPosition = localStorage.getItem('audioPlaybackPosition');
         if (storedPlaybackPosition) {
             audioPlayer.currentTime = parseFloat(storedPlaybackPosition);
@@ -206,21 +204,26 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    function showNotification(title, artist, imageUrl) {
+    function showNotification() {
         if (!("Notification" in window)) {
-            alert("This browser does not support desktop notification");
+            console.log("This browser does not support desktop notification");
+            alert("This shitty browser isn't allowed me to push notifications WTF")
         } else if (Notification.permission === "granted") {
-            displayNotification(title, artist, imageUrl);
+            displayNotification();
         } else if (Notification.permission !== 'denied') {
             Notification.requestPermission().then(function (permission) {
                 if (permission === "granted") {
-                    displayNotification(title, artist, imageUrl);
+                    displayNotification();
                 }
             });
         }
     }
 
-    function displayNotification(title, artist, imageUrl) {
+    function displayNotification() {
+        const imageUrl = audioThumbnail.src;
+        const title = songNameElement.textContent;
+        const artist = artistNameElement.textContent;
+
         var notification = new Notification(title, {
             body: artist,
             icon: imageUrl,
@@ -252,4 +255,6 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         }
     }
+
+    showNotification();
 });

@@ -85,7 +85,7 @@ body {
 #progress-bar {
     -webkit-appearance: none;
     appearance: none;
-    width: 80%;
+    width: 80%; /* Adjust width as needed */
     height: 5px;
     background-color: #535353;
     border-radius: 10px;

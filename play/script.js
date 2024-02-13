@@ -180,6 +180,27 @@ document.addEventListener("DOMContentLoaded", function () {
             });
     }
 
+    function updateLyrics() {
+        const currentTime = audioPlayer.currentTime;
+        const lines = lyricsView.textContent.split('\n');
+        let currentLyric = '';
+        for (let i = 0; i < lines.length; i++) {
+            const line = lines[i];
+            const timeRegex = /\[(\d+):(\d{2})]/g;
+            const matches = line.match(timeRegex);
+            if (matches) {
+                const minutes = parseInt(matches[0].split(':')[0].substr(1));
+                const seconds = parseInt(matches[0].split(':')[1].slice(0, -1));
+                const lyricTime = minutes * 60 + seconds;
+                if (currentTime >= lyricTime && (lines[i + 1] === undefined || currentTime < (lyricTime + 1))) {
+                    currentLyric = lines[i + 1];
+                    break;
+                }
+            }
+        }
+        lyricsView.textContent = currentLyric;
+    }
+
     lyricsToggleButton.addEventListener('click', function () {
         toggleLyricsView();
     });

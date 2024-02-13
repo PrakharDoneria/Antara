@@ -39,6 +39,8 @@ document.addEventListener("DOMContentLoaded", function () {
         updateProgressBar();
         updateDurationText(); // Call updateDurationText here
         syncLyrics();
+        // Store current playback position in localStorage
+        localStorage.setItem('audioPlaybackPosition', audioPlayer.currentTime);
     });
 
     progressBar.addEventListener('input', function () {
@@ -51,6 +53,16 @@ document.addEventListener("DOMContentLoaded", function () {
 
     audioPlayer.addEventListener('loadedmetadata', function () {
         setTotalDuration();
+        // Check if there's a stored playback position and resume playback from that position
+        const storedPlaybackPosition = localStorage.getItem('audioPlaybackPosition');
+        if (storedPlaybackPosition) {
+            audioPlayer.currentTime = parseFloat(storedPlaybackPosition);
+        }
+    });
+
+    // Add event listener for page visibility changes
+    document.addEventListener("visibilitychange", function() {
+        // No action needed when page visibility changes
     });
 
     const urlParams = new URLSearchParams(window.location.search);

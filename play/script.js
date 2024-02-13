@@ -10,6 +10,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const totalDuration = document.getElementById('total-duration');
     const lyricsView = document.getElementById('lyrics-view');
     const lyricsToggleButton = document.getElementById('lyrics-toggle-button');
+    const lyricsContainer = document.getElementById('lyrics-container');
 
     let isPlaying = false;
     let lyricsVisible = true; // Set to true to show lyrics by default
@@ -19,7 +20,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     previousButton.addEventListener('click', function () {
-        fetchPreviousOrNextAudio('previous');
+        audioPlayer.currentTime = 0; // Reset audio playback time to 0:00
     });
 
     nextButton.addEventListener('click', function () {
@@ -41,6 +42,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
     audioPlayer.addEventListener('loadedmetadata', function () {
         setTotalDuration();
+    });
+
+    window.addEventListener('beforeunload', function(event) {
+        // You can optionally perform other cleanup operations here
     });
 
     const urlParams = new URLSearchParams(window.location.search);
@@ -137,6 +142,9 @@ document.addEventListener("DOMContentLoaded", function () {
         const duration = audioPlayer.duration;
         const currentTime = (progress / 100) * duration;
         audioPlayer.currentTime = currentTime;
+
+        // Update current duration text
+        currentDuration.textContent = formatTime(currentTime);
     }
 
     function setTotalDuration() {

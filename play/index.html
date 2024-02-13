@@ -33,7 +33,7 @@
     <!-- Duration text -->
     <div id="duration-text">
         <span id="current-duration">0:00</span>
-        <span id="total-duration">0:00</span>
+        <span id="total-duration">-0:00</span> <!-- Initial value for remaining time -->
     </div>
     
     <!-- Audio player -->
@@ -43,8 +43,12 @@
     </audio>
 
     <!-- Lyrics view -->
-    <div id="lyrics-view"></div>
-    <button id="lyrics-toggle-button">Toggle Lyrics</button>
+    <div id="lyrics-view">
+        <!-- Lyrics content will be dynamically inserted here -->
+    </div>
+
+    <!-- Lyrics toggle button -->
+    <div id="lyrics-toggle-button">Hide Lyrics</div>
 </div>
 
 <script src="script.js"></script>

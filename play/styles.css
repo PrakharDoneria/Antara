@@ -85,7 +85,7 @@ body {
 #progress-bar {
     -webkit-appearance: none;
     appearance: none;
-    width: 80%; /* Adjust width as needed */
+    width: 80%;
     height: 5px;
     background-color: #535353;
     border-radius: 10px;
@@ -113,12 +113,12 @@ body {
     max-height: 50vh;
     overflow-y: auto;
     transition: max-height 0.5s ease-in-out;
-    transform: translateY(100%);
 }
 
+/* Lyrics toggle button styles */
 #lyrics-toggle-button {
     position: absolute;
-    bottom: 0;
+    bottom: 10px;
     left: 50%;
     transform: translateX(-50%);
     background-color: rgba(0, 0, 0, 0.5);
@@ -127,6 +127,7 @@ body {
     border-radius: 10px;
     cursor: pointer;
     transition: transform 0.3s ease-in-out;
+    display: none; /* Hide the lyrics toggle button by default */
 }
 
 #lyrics-toggle-button:hover {

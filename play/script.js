@@ -48,11 +48,17 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // Update current duration text
         currentDuration.textContent = formatTime(currentTime);
+
+        // Store current playback time in localStorage
+        localStorage.setItem('playbackTime', currentTime);
     });
 
     progressBar.addEventListener('input', function () {
         // Update current duration text while seeking
-        currentDuration.textContent = formatTime(audioPlayer.currentTime);
+        const progress = progressBar.value;
+        const duration = audioPlayer.duration;
+        const currentTime = (progress / 100) * duration;
+        currentDuration.textContent = formatTime(currentTime);
     });
 
     progressBar.addEventListener('change', function () {
@@ -66,6 +72,12 @@ document.addEventListener("DOMContentLoaded", function () {
     audioPlayer.addEventListener('loadedmetadata', function () {
         // Update total duration text once metadata is loaded
         totalDuration.textContent = formatTime(audioPlayer.duration);
+
+        // Restore playback time from localStorage if available
+        const storedTime = localStorage.getItem('playbackTime');
+        if (storedTime) {
+            audioPlayer.currentTime = parseFloat(storedTime);
+        }
     });
 
     const urlParams = new URLSearchParams(window.location.search);
@@ -141,26 +153,20 @@ document.addEventListener("DOMContentLoaded", function () {
         return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
     }
 
-    function fetchLyrics(artist, title) {
-        const apiKey = '9e7e11749a9fbba1ea9c7adef4b11ab3'; 
-        const apiUrl = `https://api.musixmatch.com/ws/1.1/matcher.lyrics.get?format=json&apikey=${apiKey}&q_artist=${encodeURIComponent(artist)}&q_track=${encodeURIComponent(title)}`;
+      function fetchLyrics(artist, title) {
+          fetch(`https://api.lyrics.ovh/v1/${artist}/${title}`)
+              .then(response => response.json())
+              .then(data => {
+                  if (data.lyrics) {
+                      lyricsView.textContent = data.lyrics;
+                  } else {
+                      lyricsView.textContent = "Lyrics not found.";
+                  }
+              })
+              .catch(error => {
+                  console.error('Error fetching lyrics:', error);
+              });
+      }
 
-        fetch(apiUrl)
-            .then(response => response.json())
-            .then(data => {
-                if (data.message.body.lyrics) {
-                    const lyrics = data.message.body.lyrics.lyrics_body;
-                    displayLyrics(lyrics);
-                } else {
-                    console.log('Lyrics not found');
-                }
-            })
-            .catch(error => {
-                console.error('Error fetching lyrics:', error);
-            });
-    }
-
-    function displayLyrics(lyrics) {
-        lyricsView.textContent = lyrics;
-    }
+    
 });

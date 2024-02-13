@@ -26,11 +26,12 @@ body {
     position: absolute;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
+    width: 100%; /* Ensure the background overlay covers the entire viewport */
+    height: 100%; /* Ensure the background overlay covers the entire viewport */
     background-size: cover;
     background-position: center;
     filter: blur(10px);
+    z-index: -1; /* Set z-index to ensure it appears behind other elements */
 }
 
 /* Audio details styles */
@@ -110,8 +111,8 @@ body {
     color: #fff;
     padding: 20px;
     border-radius: 10px 10px 0 0;
-    max-height: 50vh;
-    overflow-y: auto;
+    max-height: 50vh; /* Limit maximum height to half of the viewport height */
+    overflow-y: auto; /* Enable vertical scrolling if content exceeds max height */
     transition: max-height 0.5s ease-in-out;
 }
 
@@ -127,7 +128,6 @@ body {
     border-radius: 10px;
     cursor: pointer;
     transition: transform 0.3s ease-in-out;
-    display: none; /* Hide the lyrics toggle button by default */
 }
 
 #lyrics-toggle-button:hover {

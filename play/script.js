@@ -14,70 +14,38 @@ document.addEventListener("DOMContentLoaded", function () {
     const currentDuration = document.getElementById('current-duration');
     const totalDuration = document.getElementById('total-duration');
     const lyricsView = document.getElementById('lyrics-view');
+    const lyricsToggleButton = document.getElementById('lyrics-toggle-button');
 
     let isPlaying = false;
+    let lyricsVisible = false;
 
     playPauseButton.addEventListener('click', function () {
-        if (isPlaying) {
-            audioPlayer.pause();
-            playImg.style.display = 'block';
-            pauseImg.style.display = 'none';
-        } else {
-            audioPlayer.play();
-            playImg.style.display = 'none';
-            pauseImg.style.display = 'block';
-        }
-        isPlaying = !isPlaying;
+        togglePlay();
     });
 
     previousButton.addEventListener('click', function () {
-        // Fetch previous audio
         fetchPreviousOrNextAudio('previous');
     });
 
     nextButton.addEventListener('click', function () {
-        // Fetch next audio
         fetchPreviousOrNextAudio('next');
     });
 
     audioPlayer.addEventListener('timeupdate', function () {
-        const currentTime = audioPlayer.currentTime;
-        const duration = audioPlayer.duration;
-        const progress = (currentTime / duration) * 100;
-        progressBar.value = progress;
-
-        // Update current duration text
-        currentDuration.textContent = formatTime(currentTime);
-
-        // Store current playback time in localStorage
-        localStorage.setItem('playbackTime', currentTime);
+        updateProgressBar();
     });
 
     progressBar.addEventListener('input', function () {
-        // Update current duration text while seeking
-        const progress = progressBar.value;
-        const duration = audioPlayer.duration;
-        const currentTime = (progress / 100) * duration;
-        currentDuration.textContent = formatTime(currentTime);
+        updateCurrentDuration();
     });
 
     progressBar.addEventListener('change', function () {
-        // Seek to the selected position
-        const progress = progressBar.value;
-        const duration = audioPlayer.duration;
-        const currentTime = (progress / 100) * duration;
-        audioPlayer.currentTime = currentTime;
+        seekToPosition();
     });
 
     audioPlayer.addEventListener('loadedmetadata', function () {
-        // Update total duration text once metadata is loaded
-        totalDuration.textContent = formatTime(audioPlayer.duration);
-
-        // Restore playback time from localStorage if available
-        const storedTime = localStorage.getItem('playbackTime');
-        if (storedTime) {
-            audioPlayer.currentTime = parseFloat(storedTime);
-        }
+        setTotalDuration();
+        restorePlaybackTime();
     });
 
     const urlParams = new URLSearchParams(window.location.search);
@@ -101,11 +69,22 @@ document.addEventListener("DOMContentLoaded", function () {
             artistNameElement.textContent = author;
         }
 
-        // Set background image and blur effect
         backgroundOverlay.style.backgroundImage = `url('${thumbnailUrl}')`;
 
-        // Fetch lyrics
         fetchLyrics(author, title);
+    }
+
+    function togglePlay() {
+        if (isPlaying) {
+            audioPlayer.pause();
+            playImg.style.display = 'block';
+            pauseImg.style.display = 'none';
+        } else {
+            audioPlayer.play();
+            playImg.style.display = 'none';
+            pauseImg.style.display = 'block';
+        }
+        isPlaying = !isPlaying;
     }
 
     function fetchPreviousOrNextAudio(direction) {
@@ -133,10 +112,8 @@ document.addEventListener("DOMContentLoaded", function () {
                         artistNameElement.textContent = nextAuthor;
                     }
 
-                    // Update background image and blur effect
                     backgroundOverlay.style.backgroundImage = `url('${nextThumbnailUrl}')`;
 
-                    // Fetch lyrics
                     fetchLyrics(nextAuthor, nextTitle);
                 } else {
                     console.log(`No ${direction} audio available.`);
@@ -145,6 +122,40 @@ document.addEventListener("DOMContentLoaded", function () {
             .catch(error => {
                 console.error(`Error fetching ${direction} audio:`, error);
             });
+    }
+
+    function updateProgressBar() {
+        const currentTime = audioPlayer.currentTime;
+        const duration = audioPlayer.duration;
+        const progress = (currentTime / duration) * 100;
+        progressBar.value = progress;
+        currentDuration.textContent = formatTime(currentTime);
+        localStorage.setItem('playbackTime', currentTime);
+    }
+
+    function updateCurrentDuration() {
+        const progress = progressBar.value;
+        const duration = audioPlayer.duration;
+        const currentTime = (progress / 100) * duration;
+        currentDuration.textContent = formatTime(currentTime);
+    }
+
+    function seekToPosition() {
+        const progress = progressBar.value;
+        const duration = audioPlayer.duration;
+        const currentTime = (progress / 100) * duration;
+        audioPlayer.currentTime = currentTime;
+    }
+
+    function setTotalDuration() {
+        totalDuration.textContent = formatTime(audioPlayer.duration);
+    }
+
+    function restorePlaybackTime() {
+        const storedTime = localStorage.getItem('playbackTime');
+        if (storedTime) {
+            audioPlayer.currentTime = parseFloat(storedTime);
+        }
     }
 
     function formatTime(time) {
@@ -166,5 +177,18 @@ document.addEventListener("DOMContentLoaded", function () {
             .catch(error => {
                 console.error('Error fetching lyrics:', error);
             });
+    }
+
+    lyricsToggleButton.addEventListener('click', function () {
+        toggleLyricsView();
+    });
+
+    function toggleLyricsView() {
+        if (lyricsVisible) {
+            lyricsView.classList.remove('lyrics-visible');
+        } else {
+            lyricsView.classList.add('lyrics-visible');
+        }
+        lyricsVisible = !lyricsVisible;
     }
 });

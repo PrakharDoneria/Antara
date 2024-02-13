@@ -15,9 +15,11 @@ document.addEventListener("DOMContentLoaded", function () {
     const playIcon = document.getElementById('play-icon');
     const pauseIcon = document.getElementById('pause-icon');
     const durationText = document.getElementById('duration-text');
+    const downloadAppModal = document.getElementById('download-app-modal');
 
     let isPlaying = true;
     let lyricsVisible = true;
+    let wakeLock = null;
 
     // Set initial button display state
     playIcon.style.display = 'none';
@@ -40,6 +42,7 @@ document.addEventListener("DOMContentLoaded", function () {
         updateDurationText();
         syncLyrics();
         localStorage.setItem('audioPlaybackPosition', audioPlayer.currentTime);
+        requestWakeLock();
     });
 
     progressBar.addEventListener('input', function () {
@@ -56,6 +59,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (storedPlaybackPosition) {
             audioPlayer.currentTime = parseFloat(storedPlaybackPosition);
         }
+        requestWakeLock();
     });
 
     const urlParams = new URLSearchParams(window.location.search);
@@ -204,57 +208,28 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    function showNotification() {
-        if (!("Notification" in window)) {
-            console.log("This browser does not support desktop notification");
-            alert("This shitty browser isn't allowed me to push notifications WTF");
-        } else if (Notification.permission === "granted") {
-            displayNotification();
-        } else if (Notification.permission !== 'denied') {
-            Notification.requestPermission().then(function (permission) {
-                if (permission === "granted") {
-                    displayNotification();
-                }
-            });
-        }
-    }
-
-    function displayNotification() {
-        const imageUrl = audioThumbnail.src;
-        const title = songNameElement.textContent;
-        const artist = artistNameElement.textContent;
-
-        var notification = new Notification(title, {
-            body: artist,
-            icon: imageUrl,
-            actions: [
-                { action: 'play', title: 'Play' },
-                { action: 'pause', title: 'Pause' },
-                { action: 'next', title: 'Next' }
-            ]
-        });
-
-        notification.onclick = function (event) {
-            // Handle notification click event
-        }
-
-        notification.onaction = function (event) {
-            // Handle notification button click event
-            switch (event.action) {
-                case 'play':
-                    togglePlay();
-                    break;
-                case 'pause':
-                    togglePlay();
-                    break;
-                case 'next':
-                    fetchPreviousOrNextAudio('next');
-                    break;
-                default:
-                    console.log("Unknown action clicked");
+    function requestWakeLock() {
+        if ('wakeLock' in navigator) {
+            if (!wakeLock) {
+                navigator.wakeLock.request('screen')
+                    .then((wl) => {
+                        wakeLock = wl;
+                        console.log('Screen Wake Lock acquired');
+                    })
+                    .catch((err) => {
+                        console.error(`${err.name}, ${err.message}`);
+                    });
             }
         }
     }
 
-    showNotification();
+    window.addEventListener('beforeunload', function (event) {
+        event.preventDefault();
+        event.returnValue = '';
+        showDownloadAppModal();
+    });
+
+    function showDownloadAppModal() {
+        downloadAppModal.style.display = 'block';
+    }
 });

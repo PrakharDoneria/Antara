@@ -126,3 +126,28 @@ body {
 .lyrics-visible #background-overlay {
     filter: blur(10px) brightness(70%);
 }
+
+/* Download app modal styles */
+#download-app-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    z-index: 9999;
+    color: #fff;
+    font-size: 24px;
+    text-align: center;
+    padding-top: 20%;
+}
+
+#download-app-modal p {
+    margin-bottom: 20px;
+}
+
+#download-app-modal a {
+    color: #fff;
+    text-decoration: underline;
+}

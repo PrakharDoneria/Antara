@@ -33,6 +33,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     audioPlayer.addEventListener('timeupdate', function () {
         updateProgressBar();
+        updateLyrics();
     });
 
     progressBar.addEventListener('input', function () {
@@ -77,12 +78,12 @@ document.addEventListener("DOMContentLoaded", function () {
     function togglePlay() {
         if (isPlaying) {
             audioPlayer.pause();
-            playImg.style.display = 'block';
-            pauseImg.style.display = 'none';
+            if (playImg) playImg.style.display = 'block';
+            if (pauseImg) pauseImg.style.display = 'none';
         } else {
             audioPlayer.play();
-            playImg.style.display = 'none';
-            pauseImg.style.display = 'block';
+            if (playImg) playImg.style.display = 'none';
+            if (pauseImg) pauseImg.style.display = 'block';
         }
         isPlaying = !isPlaying;
     }

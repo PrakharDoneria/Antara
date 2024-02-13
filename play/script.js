@@ -5,12 +5,15 @@ document.addEventListener("DOMContentLoaded", function () {
     const playPauseButton = document.getElementById('play-pause-button');
     const previousButton = document.getElementById('previous-button');
     const nextButton = document.getElementById('next-button');
+    const backward10Button = document.getElementById('backward-10-button');
+    const forward10Button = document.getElementById('forward-10-button');
     const progressBar = document.getElementById('progress-bar');
     const currentDuration = document.getElementById('current-duration');
     const totalDuration = document.getElementById('total-duration');
     const lyricsView = document.getElementById('lyrics-view');
-    const lyricsToggleButton = document.getElementById('lyrics-toggle-button');
     const lyricsContainer = document.getElementById('lyrics-container');
+    const lyricsToggleButton = document.getElementById('lyrics-toggle-button');
+    const backgroundOverlay = document.getElementById('background-overlay');
 
     let isPlaying = false;
     let lyricsVisible = true; // Set to true to show lyrics by default
@@ -20,11 +23,19 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     previousButton.addEventListener('click', function () {
-        audioPlayer.currentTime = 0; // Reset audio playback time to 0:00
+        fetchPreviousOrNextAudio('previous');
     });
 
     nextButton.addEventListener('click', function () {
         fetchPreviousOrNextAudio('next');
+    });
+
+    backward10Button.addEventListener('click', function () {
+        backward10Seconds();
+    });
+
+    forward10Button.addEventListener('click', function () {
+        forward10Seconds();
     });
 
     audioPlayer.addEventListener('timeupdate', function () {
@@ -42,10 +53,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     audioPlayer.addEventListener('loadedmetadata', function () {
         setTotalDuration();
-    });
-
-    window.addEventListener('beforeunload', function(event) {
-        // You can optionally perform other cleanup operations here
     });
 
     const urlParams = new URLSearchParams(window.location.search);
@@ -70,6 +77,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         fetchLyrics(author, title);
+        setBackgroundOverlay(thumbnailUrl);
     }
 
     function togglePlay() {
@@ -107,6 +115,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     }
 
                     fetchLyrics(nextAuthor, nextTitle);
+                    setBackgroundOverlay(nextThumbnailUrl);
                 } else {
                     console.log(`No ${direction} audio available.`);
                 }
@@ -114,6 +123,14 @@ document.addEventListener("DOMContentLoaded", function () {
             .catch(error => {
                 console.error(`Error fetching ${direction} audio:`, error);
             });
+    }
+
+    function backward10Seconds() {
+        audioPlayer.currentTime -= 10;
+    }
+
+    function forward10Seconds() {
+        audioPlayer.currentTime += 10;
     }
 
     function updateProgressBar() {
@@ -142,9 +159,6 @@ document.addEventListener("DOMContentLoaded", function () {
         const duration = audioPlayer.duration;
         const currentTime = (progress / 100) * duration;
         audioPlayer.currentTime = currentTime;
-
-        // Update current duration text
-        currentDuration.textContent = formatTime(currentTime);
     }
 
     function setTotalDuration() {
@@ -171,5 +185,9 @@ document.addEventListener("DOMContentLoaded", function () {
             .catch(error => {
                 console.error('Error fetching lyrics:', error);
             });
+    }
+
+    function setBackgroundOverlay(imageUrl) {
+        backgroundOverlay.style.backgroundImage = `url('${imageUrl}')`;
     }
 });

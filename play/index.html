@@ -22,9 +22,11 @@
     
     <!-- Player controls -->
     <div id="player-controls">
+        <button id="backward-10-button" class="control-button"><span class="material-icons">replay_10</span></button>
         <button id="previous-button" class="control-button"><span class="material-icons">skip_previous</span></button>
         <button id="play-pause-button" class="control-button"><span class="material-icons">play_arrow</span></button>
         <button id="next-button" class="control-button"><span class="material-icons">skip_next</span></button>
+        <button id="forward-10-button" class="control-button"><span class="material-icons">forward_10</span></button>
     </div>
     
     <!-- Seek bar -->
@@ -42,14 +44,12 @@
         Your browser does not support the audio tag.
     </audio>
 
-    <!-- Lyrics view -->
+    <!-- Lyrics container -->
     <div id="lyrics-container">
-        <div id="lyrics-view">
-            <!-- Lyrics content will be dynamically inserted here -->
-        </div>
+        <p id="lyrics-view"></p>
     </div>
+</div>
 
-    
 <script src="script.js"></script>
 </body>
 </html>

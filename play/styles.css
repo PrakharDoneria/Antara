@@ -7,8 +7,9 @@
 
 /* Body styles */
 body {
+    margin: 0;
+    padding: 0;
     background-color: #1a1a1a;
-    font-family: 'Salsa', sans-serif;
 }
 
 /* Audio container styles */
@@ -31,6 +32,13 @@ body {
     background-size: cover;
     background-position: center;
     filter: blur(10px);
+    animation: fadeInOut 10s infinite alternate;
+}
+
+@keyframes fadeInOut {
+    0% { opacity: 0; }
+    50% { opacity: 1; }
+    100% { opacity: 0; }
 }
 
 /* Audio details styles */
@@ -100,31 +108,25 @@ body {
     margin-top: 5px;
 }
 
-/* Lyrics container styles */
-#lyrics-container {
+/* Lyrics view styles */
+#lyrics-view {
     position: absolute;
     bottom: 0;
     left: 0;
     width: 100%;
-    height: 100px; /* Set a fixed height for the lyrics container */
-    overflow: hidden; /* Hide overflow to prevent lyrics from expanding beyond the container */
     background-color: rgba(0, 0, 0, 0.5);
+    color: #fff;
+    padding: 20px;
     border-radius: 10px 10px 0 0;
-    z-index: 1; /* Ensure lyrics container appears above background overlay */
-}
-
-/* Lyrics view styles */
-#lyrics-view {
-    width: 100%;
-    height: 100%;
-    padding: 10px;
+    max-height: 50vh;
     overflow-y: auto;
+    transition: max-height 0.5s ease-in-out;
+    transform: translateY(100%);
 }
 
-/* Lyrics toggle button styles */
 #lyrics-toggle-button {
     position: absolute;
-    bottom: 10px;
+    bottom: 0;
     left: 50%;
     transform: translateX(-50%);
     background-color: rgba(0, 0, 0, 0.5);
@@ -143,6 +145,6 @@ body {
     transform: translateY(-100%);
 }
 
-.lyrics-visible #lyrics-container {
-    height: 20vh; /* Increase height to show lyrics */
+.lyrics-visible #lyrics-view {
+    transform: translateY(0);
 }

@@ -47,6 +47,32 @@ document.addEventListener("DOMContentLoaded", function () {
         setTotalDuration();
     });
 
+    const urlParams = new URLSearchParams(window.location.search);
+    const audioId = urlParams.get('audioId');
+    const title = urlParams.get('title');
+    const author = urlParams.get('author');
+
+    if (audioId) {
+        const audioUrl = `https://paxsenixjs.deno.dev/download?id=${audioId}&type=audio`;
+        const thumbnailUrl = `https://paxsenixjs.deno.dev/thumbnailHD?id=${audioId}`;
+
+        audioSource.src = audioUrl;
+        audioThumbnail.src = thumbnailUrl;
+        audioPlayer.load();
+
+        if (title) {
+            songNameElement.textContent = title;
+        }
+
+        if (author) {
+            artistNameElement.textContent = author;
+        }
+
+        backgroundOverlay.style.backgroundImage = `url('${thumbnailUrl}')`;
+
+        fetchLyrics(author, title);
+    }
+
     function togglePlay() {
         if (isPlaying) {
             audioPlayer.pause();
@@ -61,7 +87,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function fetchPreviousOrNextAudio(direction) {
-        fetch(`https://antara.deno.dev/${direction}`)
+        fetch(`https://antara.deno.dev/${direction}?id=${audioId}`)
             .then(response => response.json())
             .then(data => {
                 if (data.length > 0) {

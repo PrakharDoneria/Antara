@@ -207,7 +207,7 @@ document.addEventListener("DOMContentLoaded", function () {
     function showNotification() {
         if (!("Notification" in window)) {
             console.log("This browser does not support desktop notification");
-            alert("This shitty browser isn't allowed me to push notifications WTF")
+            alert("This shitty browser isn't allowed me to push notifications WTF");
         } else if (Notification.permission === "granted") {
             displayNotification();
         } else if (Notification.permission !== 'denied') {

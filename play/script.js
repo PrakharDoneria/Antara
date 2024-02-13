@@ -60,11 +60,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-    // Add event listener for page visibility changes
-    document.addEventListener("visibilitychange", function() {
-        // No action needed when page visibility changes
-    });
-
     const urlParams = new URLSearchParams(window.location.search);
     const audioId = urlParams.get('audioId');
     const title = urlParams.get('title');

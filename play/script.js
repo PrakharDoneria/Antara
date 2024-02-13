@@ -6,14 +6,14 @@ document.addEventListener("DOMContentLoaded", function () {
     const previousButton = document.getElementById('previous-button');
     const nextButton = document.getElementById('next-button');
     const progressBar = document.getElementById('progress-bar');
-    const playImg = document.getElementById('play-img');
-    const pauseImg = document.getElementById('pause-img');
     const songNameElement = document.getElementById('song-name');
     const artistNameElement = document.getElementById('artist-name');
     const backgroundOverlay = document.getElementById('background-overlay');
     const currentDuration = document.getElementById('current-duration');
     const totalDuration = document.getElementById('total-duration');
     const lyricsView = document.getElementById('lyrics-view');
+    const playIcon = document.getElementById('play-icon');
+    const pauseIcon = document.getElementById('pause-icon');
 
     let isPlaying = false;
     let lyricsVisible = true;
@@ -47,47 +47,21 @@ document.addEventListener("DOMContentLoaded", function () {
         setTotalDuration();
     });
 
-    const urlParams = new URLSearchParams(window.location.search);
-    const audioId = urlParams.get('audioId');
-    const title = urlParams.get('title');
-    const author = urlParams.get('author');
-
-    if (audioId) {
-        const audioUrl = `https://paxsenixjs.deno.dev/download?id=${audioId}&type=audio`;
-        const thumbnailUrl = `https://paxsenixjs.deno.dev/thumbnailHD?id=${audioId}`;
-
-        audioSource.src = audioUrl;
-        audioThumbnail.src = thumbnailUrl;
-        audioPlayer.load();
-
-        if (title) {
-            songNameElement.textContent = title;
-        }
-
-        if (author) {
-            artistNameElement.textContent = author;
-        }
-
-        backgroundOverlay.style.backgroundImage = `url('${thumbnailUrl}')`;
-
-        fetchLyrics(author, title);
-    }
-
     function togglePlay() {
         if (isPlaying) {
             audioPlayer.pause();
-            playImg.style.display = 'block';
-            pauseImg.style.display = 'none';
+            playIcon.style.display = 'block';
+            pauseIcon.style.display = 'none';
         } else {
             audioPlayer.play();
-            playImg.style.display = 'none';
-            pauseImg.style.display = 'block';
+            playIcon.style.display = 'none';
+            pauseIcon.style.display = 'block';
         }
         isPlaying = !isPlaying;
     }
 
     function fetchPreviousOrNextAudio(direction) {
-        fetch(`https://antara.deno.dev/${direction}?id=${audioId}`)
+        fetch(`https://antara.deno.dev/${direction}`)
             .then(response => response.json())
             .then(data => {
                 if (data.length > 0) {
@@ -154,7 +128,7 @@ document.addEventListener("DOMContentLoaded", function () {
     function formatTime(time) {
         const minutes = Math.floor(time / 60);
         const seconds = Math.floor(time % 60);
-        return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+        return `${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
     }
 
     function fetchLyrics(artist, title) {

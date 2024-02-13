@@ -126,3 +126,9 @@ body {
 .lyrics-visible #background-overlay {
     filter: blur(10px) brightness(70%);
 }
+
+
+#play-icon,
+#pause-icon {
+    display: none; 
+}

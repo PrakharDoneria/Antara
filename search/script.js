@@ -41,7 +41,7 @@ document.addEventListener("DOMContentLoaded", function() {
                       const audioId = result.videoId;
                       const title = encodeURIComponent(result.title);
                       const author = encodeURIComponent(result.author);
-                      window.location.href = `play?title=${title}&author=${author}&audioId=${audioId}`;
+                      window.location.href = `/play?title=${title}&author=${author}&audioId=${audioId}`;
                   });
 
                     searchResultsList.appendChild(listItem);

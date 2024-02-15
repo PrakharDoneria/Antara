@@ -17,11 +17,16 @@ document.addEventListener("DOMContentLoaded", function () {
     const durationText = document.getElementById('duration-text');
     const downloadAppModal = document.getElementById('download-app-modal');
 
-    let isPlaying = true;
+    let isPlaying = false;
     let lyricsVisible = true;
     let wakeLock = null;
 
     // Set initial button display state
+    playIcon.style.display = 'none';
+    pauseIcon.style.display = 'block';
+
+    // Set initial state of music player to paused
+    audioPlayer.pause();
     playIcon.style.display = 'none';
     pauseIcon.style.display = 'block';
 

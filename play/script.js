@@ -118,7 +118,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     audioSource.src = nextAudioUrl;
                     audioThumbnail.src = nextThumbnailUrl;
                     audioPlayer.load();
-                    audioPlayer.play();
+                    audioPlayer.pause();
 
                     const nextTitle = data[0].title;
                     const nextAuthor = data[0].author;

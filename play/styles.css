@@ -1,14 +1,17 @@
+/* Reset default margin and padding */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
+/* Body styles */
 body {
     background-color: #000;
     font-family: 'Salsa', sans-serif;
 }
 
+/* Audio container styles */
 .audio-container {
     position: relative;
     display: flex;
@@ -18,6 +21,7 @@ body {
     height: 100vh;
 }
 
+/* Background overlay styles */
 #background-overlay {
     position: absolute;
     top: 0;
@@ -29,6 +33,7 @@ body {
     filter: blur(10px);
 }
 
+/* Audio details styles */
 #audio-details {
     position: relative;
     z-index: 1;
@@ -58,6 +63,7 @@ body {
     font-size: 18px;
 }
 
+/* Player controls styles */
 #player-controls {
     position: relative;
     z-index: 1;
@@ -76,6 +82,7 @@ body {
     margin: 0 10px;
 }
 
+/* Progress bar styles */
 #progress-bar {
     -webkit-appearance: none;
     appearance: none;
@@ -86,6 +93,7 @@ body {
     outline: none;
 }
 
+/* Duration text styles */
 #duration-text {
     display: flex;
     justify-content: space-between;
@@ -94,6 +102,7 @@ body {
     font-size: 14px;
 }
 
+/* Lyrics view styles */
 #lyrics-view {
     position: absolute;
     bottom: 0;
@@ -118,6 +127,7 @@ body {
     filter: blur(10px) brightness(70%);
 }
 
+/* Download app modal styles */
 #download-app-modal {
     display: none;
     position: fixed;
@@ -130,15 +140,7 @@ body {
     color: #fff;
     font-size: 24px;
     text-align: center;
-    padding-top: 50vh;
-}
-
-.modal-content {
-    background-color: #333;
-    padding: 20px;
-    border-radius: 10px;
-    display: inline-block;
-    cursor: default;
+    padding-top: 20%;
 }
 
 #download-app-modal p {

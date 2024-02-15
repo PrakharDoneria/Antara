@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const nextButton = document.getElementById('next-button');
     const progressBar = document.getElementById('progress-bar');
     const songNameElement = document.getElementById('song-name');
-    const artistNameElement = document.getElementById('artist-name');
+    const artistNameElement = document.getElementById('artist-name'); 
     const backgroundOverlay = document.getElementById('background-overlay');
     const currentDuration = document.getElementById('current-duration');
     const totalDuration = document.getElementById('total-duration');
@@ -21,6 +21,7 @@ document.addEventListener("DOMContentLoaded", function () {
     let lyricsVisible = true;
     let wakeLock = null;
 
+    // Set initial button display state
     playIcon.style.display = 'none';
     pauseIcon.style.display = 'block';
 
@@ -36,20 +37,20 @@ document.addEventListener("DOMContentLoaded", function () {
         fetchPreviousOrNextAudio('next');
     });
 
-    progressBar.addEventListener('input', function () {
-        updateCurrentDuration();
-    });
-
-    progressBar.addEventListener('change', function () {
-        seekToPosition();
-    });
-
     audioPlayer.addEventListener('timeupdate', function () {
         updateProgressBar();
         updateDurationText();
         syncLyrics();
         localStorage.setItem('audioPlaybackPosition', audioPlayer.currentTime);
         requestWakeLock();
+    });
+
+    progressBar.addEventListener('input', function () {
+        updateCurrentDuration();
+    });
+
+    progressBar.addEventListener('change', function () {
+        seekToPosition();
     });
 
     audioPlayer.addEventListener('loadedmetadata', function () {
@@ -61,11 +62,31 @@ document.addEventListener("DOMContentLoaded", function () {
         requestWakeLock();
     });
 
-    window.addEventListener('beforeunload', function (event) {
-        event.preventDefault();
-        event.returnValue = '';
-        showDownloadAppModal();
-    });
+    const urlParams = new URLSearchParams(window.location.search);
+    const audioId = urlParams.get('audioId');
+    const title = urlParams.get('title');
+    const author = urlParams.get('author');
+
+    if (audioId) {
+        const audioUrl = `https://paxsenixjs.deno.dev/download?id=${audioId}&type=audio`;
+        const thumbnailUrl = `https://paxsenixjs.deno.dev/thumbnailHD?id=${audioId}`;
+
+        audioSource.src = audioUrl;
+        audioThumbnail.src = thumbnailUrl;
+        audioPlayer.load();
+
+        if (title) {
+            songNameElement.textContent = title;
+        }
+
+        if (author) {
+            artistNameElement.textContent = author;
+        }
+
+        backgroundOverlay.style.backgroundImage = `url('${thumbnailUrl}')`;
+
+        fetchLyrics(author, title);
+    }
 
     function togglePlay() {
         if (isPlaying) {
@@ -201,6 +222,12 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         }
     }
+
+    window.addEventListener('beforeunload', function (event) {
+        event.preventDefault();
+        event.returnValue = '';
+        showDownloadAppModal();
+    });
 
     function showDownloadAppModal() {
         downloadAppModal.style.display = 'block';

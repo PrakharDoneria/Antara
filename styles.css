@@ -47,9 +47,12 @@ body {
     border-radius: 50%;
 }
 
+.white-icon {
+    color: #fff;
+}
+
 .material-icons {
     font-size: 24px;
-    color: #fff;
 }
 
 #songs-list {
@@ -99,4 +102,38 @@ body {
 
 .song-details span:last-child {
     font-style: italic;
+}
+
+/* Styles for progress bar */
+.progress-container {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: #ddd;
+    height: 5px;
+    display: none; /* Initially hidden */
+}
+
+.progress-bar {
+    height: 100%;
+    background-color: #4caf50;
+    width: 0%;
+}
+
+/* Additional styling for song info popup */
+.song-info-popup {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.song-item.long-press .song-info-popup {
+    display: block;
 }

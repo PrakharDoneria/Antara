@@ -22,8 +22,8 @@ document.addEventListener("DOMContentLoaded", function () {
     let wakeLock = null;
 
     // Set initial button display state
-    playIcon.style.display = 'none';
-    pauseIcon.style.display = 'block';
+    pauseIcon.style.display = 'none';
+    playIcon.style.display = 'block';
 
     // Set initial state of music player to paused
     audioPlayer.pause();

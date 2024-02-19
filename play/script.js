@@ -19,12 +19,8 @@ document.addEventListener("DOMContentLoaded", function () {
     let isPlaying = true;
     let lyricsVisible = true;
 
-    // Set initial button display state
     playIcon.style.display = 'none';
     pauseIcon.style.display = 'block';
-
-    // Initially hide the lyrics view
-    lyricsView.innerHTML = "Lyrics are currently not available.";
 
     playPauseButton.addEventListener('click', function () {
         togglePlay();
@@ -40,7 +36,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     audioPlayer.addEventListener('timeupdate', function () {
         updateProgressBar();
-
         syncLyrics();
     });
 
@@ -174,6 +169,7 @@ document.addEventListener("DOMContentLoaded", function () {
             .then(data => {
                 if (data) {
                     lyricsView.innerHTML = removeTimestamps(data);
+                    syncLyrics();
                 } else {
                     lyricsView.textContent = "Lyrics not found.";
                 }
@@ -184,7 +180,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function removeTimestamps(data) {
-        // Remove timestamps from the lyrics
         return data.replace(/\[\d+:\d+\.\d+\]/g, '');
     }
 
@@ -192,24 +187,16 @@ document.addEventListener("DOMContentLoaded", function () {
         const currentTime = audioPlayer.currentTime;
         const lines = lyricsView.textContent.split('\n');
 
-        // Iterate through each line of lyrics
         for (let i = 0; i < lines.length; i++) {
             const line = lines[i];
-
-            // Extract timestamp from the line
             const timestampMatch = line.match(/\[(\d+:\d+\.\d+)\]/);
 
             if (timestampMatch) {
-                // Extract minutes, seconds, and milliseconds from the timestamp
                 const [, timestamp] = timestampMatch;
                 const [minutes, seconds, milliseconds] = timestamp.split(/[:.]/).map(Number);
-
-                // Convert timestamp to seconds
                 const lineTime = minutes * 60 + seconds + milliseconds / 1000;
 
-                // Check if the current time matches the line time
                 if (Math.floor(lineTime) === Math.floor(currentTime)) {
-                    // Highlight the matched line
                     lyricsView.innerHTML = lines.map((line, index) => {
                         return index === i ? `<span class="highlighted">${line}</span>` : line;
                     }).join('\n');

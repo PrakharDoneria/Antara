@@ -164,7 +164,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function fetchLyrics(audioId) {
-        fetch(`https://paxsenix.deno.dev/music/lyrics/sync?type=text&id=${audioId}`)
+        fetch(`https://youtube-data.deno.dev/music/lyrics/sync?id=${audioId}`)
             .then(response => response.text())
             .then(data => {
                 if (data) {

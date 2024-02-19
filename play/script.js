@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const nextButton = document.getElementById('next-button');
     const progressBar = document.getElementById('progress-bar');
     const songNameElement = document.getElementById('song-name');
-    const artistNameElement = document.getElementById('artist-name'); 
+    const artistNameElement = document.getElementById('artist-name');
     const backgroundOverlay = document.getElementById('background-overlay');
     const currentDuration = document.getElementById('current-duration');
     const totalDuration = document.getElementById('total-duration');
@@ -15,20 +15,16 @@ document.addEventListener("DOMContentLoaded", function () {
     const playIcon = document.getElementById('play-icon');
     const pauseIcon = document.getElementById('pause-icon');
     const durationText = document.getElementById('duration-text');
-    const downloadAppModal = document.getElementById('download-app-modal');
 
-    let isPlaying = false;
+    let isPlaying = true;
     let lyricsVisible = true;
-    let wakeLock = null;
 
     // Set initial button display state
-    pauseIcon.style.display = 'none';
-    playIcon.style.display = 'block';
-
-    // Set initial state of music player to paused
-    audioPlayer.pause();
     playIcon.style.display = 'none';
     pauseIcon.style.display = 'block';
+
+    // Initially hide the lyrics view
+    lyricsView.innerHTML = "Lyrics are currently not available.";
 
     playPauseButton.addEventListener('click', function () {
         togglePlay();
@@ -44,10 +40,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
     audioPlayer.addEventListener('timeupdate', function () {
         updateProgressBar();
-        updateDurationText();
+
         syncLyrics();
-        localStorage.setItem('audioPlaybackPosition', audioPlayer.currentTime);
-        requestWakeLock();
     });
 
     progressBar.addEventListener('input', function () {
@@ -60,16 +54,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
     audioPlayer.addEventListener('loadedmetadata', function () {
         setTotalDuration();
-        const storedPlaybackPosition = localStorage.getItem('audioPlaybackPosition');
-        if (storedPlaybackPosition) {
-            audioPlayer.currentTime = parseFloat(storedPlaybackPosition);
-        }
-        requestWakeLock();
     });
 
     const urlParams = new URLSearchParams(window.location.search);
     const audioId = urlParams.get('audioId');
-    const title = urlParams.get('title');
+    const title = urlParams.get('title').replace("+"," ");
     const author = urlParams.get('author');
 
     if (audioId) {
@@ -90,7 +79,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         backgroundOverlay.style.backgroundImage = `url('${thumbnailUrl}')`;
 
-        fetchLyrics(author, title);
+        fetchLyrics(audioId);
     }
 
     function togglePlay() {
@@ -118,7 +107,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     audioSource.src = nextAudioUrl;
                     audioThumbnail.src = nextThumbnailUrl;
                     audioPlayer.load();
-                    audioPlayer.pause();
+                    audioPlayer.play();
 
                     const nextTitle = data[0].title;
                     const nextAuthor = data[0].author;
@@ -133,7 +122,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
                     backgroundOverlay.style.backgroundImage = `url('${nextThumbnailUrl}')`;
 
-                    fetchLyrics(nextAuthor, nextTitle);
+                    fetchLyrics(nextAudioId);
                 } else {
                     console.log(`No ${direction} audio available.`);
                 }
@@ -179,12 +168,12 @@ document.addEventListener("DOMContentLoaded", function () {
         return `${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
     }
 
-    function fetchLyrics(artist, title) {
-        fetch(`https://api.lyrics.ovh/v1/${artist}/${title}`)
-            .then(response => response.json())
+    function fetchLyrics(audioId) {
+        fetch(`https://paxsenix.deno.dev/music/lyrics/sync?type=text&id=${audioId}`)
+            .then(response => response.text())
             .then(data => {
-                if (data.lyrics) {
-                    lyricsView.textContent = data.lyrics;
+                if (data) {
+                    lyricsView.innerHTML = removeTimestamps(data);
                 } else {
                     lyricsView.textContent = "Lyrics not found.";
                 }
@@ -194,47 +183,38 @@ document.addEventListener("DOMContentLoaded", function () {
             });
     }
 
+    function removeTimestamps(data) {
+        // Remove timestamps from the lyrics
+        return data.replace(/\[\d+:\d+\.\d+\]/g, '');
+    }
+
     function syncLyrics() {
         const currentTime = audioPlayer.currentTime;
         const lines = lyricsView.textContent.split('\n');
+
+        // Iterate through each line of lyrics
         for (let i = 0; i < lines.length; i++) {
             const line = lines[i];
-            const timeMatch = line.match(/\[(\d+):(\d+)\]/);
-            if (timeMatch) {
-                const minutes = parseInt(timeMatch[1]);
-                const seconds = parseInt(timeMatch[2]);
-                const lineTime = minutes * 60 + seconds;
-                if (lineTime > currentTime) {
-                    const prevLine = i > 0 ? lines[i - 1] : '';
-                    lyricsView.innerHTML = `<span class="prev-line">${prevLine}</span><span class="current-line">${line}</span><span class="next-line">${lines[i + 1]}</span>`;
-                    break;
+
+            // Extract timestamp from the line
+            const timestampMatch = line.match(/\[(\d+:\d+\.\d+)\]/);
+
+            if (timestampMatch) {
+                // Extract minutes, seconds, and milliseconds from the timestamp
+                const [, timestamp] = timestampMatch;
+                const [minutes, seconds, milliseconds] = timestamp.split(/[:.]/).map(Number);
+
+                // Convert timestamp to seconds
+                const lineTime = minutes * 60 + seconds + milliseconds / 1000;
+
+                // Check if the current time matches the line time
+                if (Math.floor(lineTime) === Math.floor(currentTime)) {
+                    // Highlight the matched line
+                    lyricsView.innerHTML = lines.map((line, index) => {
+                        return index === i ? `<span class="highlighted">${line}</span>` : line;
+                    }).join('\n');
                 }
             }
         }
-    }
-
-    function requestWakeLock() {
-        if ('wakeLock' in navigator) {
-            if (!wakeLock) {
-                navigator.wakeLock.request('screen')
-                    .then((wl) => {
-                        wakeLock = wl;
-                        console.log('Screen Wake Lock acquired');
-                    })
-                    .catch((err) => {
-                        console.error(`${err.name}, ${err.message}`);
-                    });
-            }
-        }
-    }
-
-    window.addEventListener('beforeunload', function (event) {
-        event.preventDefault();
-        event.returnValue = '';
-        showDownloadAppModal();
-    });
-
-    function showDownloadAppModal() {
-        downloadAppModal.style.display = 'block';
     }
 });

@@ -91,6 +91,20 @@ body {
     background-color: #535353;
     border-radius: 10px;
     outline: none;
+    margin-bottom: 20px;
+    position: relative;
+}
+
+#progress-bar::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    background-color: #fff;
+    border-radius: 50%;
+    cursor: pointer;
+    position: relative;
+    z-index: 2;
 }
 
 /* Duration text styles */
@@ -127,27 +141,8 @@ body {
     filter: blur(10px) brightness(70%);
 }
 
-/* Download app modal styles */
-#download-app-modal {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.8);
-    z-index: 9999;
-    color: #fff;
-    font-size: 24px;
-    text-align: center;
-    padding-top: 20%;
-}
-
-#download-app-modal p {
-    margin-bottom: 20px;
-}
-
-#download-app-modal a {
-    color: #fff;
-    text-decoration: underline;
+/* Highlighted lyrics line */
+.highlighted {
+    background-color: #ff0; /* Change to desired highlight color */
+    font-weight: bold; /* Make the text bold to stand out */
 }

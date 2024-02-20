@@ -19,6 +19,7 @@ document.addEventListener("DOMContentLoaded", function () {
     let isPlaying = true;
     let lyricsVisible = true;
 
+    // Set initial button display state
     playIcon.style.display = 'none';
     pauseIcon.style.display = 'block';
 
@@ -164,12 +165,11 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function fetchLyrics(audioId) {
-        fetch(`https://youtube-data.deno.dev/music/lyrics/sync?id=${audioId}`)
+        fetch(`https://youtube-data.deno.dev/music/lyrics/sync?type=text&id=${audioId}`)
             .then(response => response.text())
             .then(data => {
                 if (data) {
-                    lyricsView.innerHTML = removeTimestamps(data);
-                    syncLyrics();
+                    lyricsView.innerHTML = removeLrcTags(data);
                 } else {
                     lyricsView.textContent = "Lyrics not found.";
                 }
@@ -179,29 +179,42 @@ document.addEventListener("DOMContentLoaded", function () {
             });
     }
 
-    function removeTimestamps(data) {
-        return data.replace(/\[\d+:\d+\.\d+\]/g, '');
+    function removeLrcTags(line) {
+        return line;
     }
 
     function syncLyrics() {
         const currentTime = audioPlayer.currentTime;
         const lines = lyricsView.textContent.split('\n');
+        let currentLineIndex = -1;
 
         for (let i = 0; i < lines.length; i++) {
             const line = lines[i];
-            const timestampMatch = line.match(/\[(\d+:\d+\.\d+)\]/);
+            const timeMatch = line.match(/\[(\d+):(\d+\.\d+)\]/);
 
-            if (timestampMatch) {
-                const [, timestamp] = timestampMatch;
-                const [minutes, seconds, milliseconds] = timestamp.split(/[:.]/).map(Number);
-                const lineTime = minutes * 60 + seconds + milliseconds / 1000;
+            if (timeMatch) {
+                const minutes = parseInt(timeMatch[1]);
+                const seconds = parseFloat(timeMatch[2]);
+                const lineTime = minutes * 60 + seconds;
 
-                if (Math.floor(lineTime) === Math.floor(currentTime)) {
-                    lyricsView.innerHTML = lines.map((line, index) => {
-                        return index === i ? `<span class="highlighted">${line}</span>` : line;
-                    }).join('\n');
+                if (currentTime >= lineTime) {
+                    currentLineIndex = i;
+                } else {
+                    break;
                 }
             }
+        }
+
+        if (currentLineIndex !== -1) {
+            const styledLines = lines.map((line, index) => {
+                if (index === currentLineIndex) {
+                    return `<span class="highlighted">${line}</span>`;
+                } else {
+                    return line;
+                }
+            });
+
+            lyricsView.innerHTML = styledLines.join('\n');
         }
     }
 });

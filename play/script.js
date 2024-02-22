@@ -58,8 +58,8 @@ document.addEventListener("DOMContentLoaded", function () {
     const author = urlParams.get('author');
 
     if (audioId) {
-        const audioUrl = `https://paxsenixjs.deno.dev/download?id=${audioId}&type=audio`;
-        const thumbnailUrl = `https://paxsenixjs.deno.dev/thumbnailHD?id=${audioId}`;
+        const audioUrl = `https://antara-in.deno.dev/download?id=${audioId}&type=audio`;
+        const thumbnailUrl = `https://antara-in.deno.dev/thumbnailHD?id=${audioId}`;
 
         audioSource.src = audioUrl;
         audioThumbnail.src = thumbnailUrl;
@@ -92,12 +92,12 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function fetchPreviousOrNextAudio(direction) {
-        fetch(`https://antara.deno.dev/${direction}?id=${audioId}`)
+        fetch(`https://antara-in.deno.dev/${direction}?id=${audioId}`)
             .then(response => response.json())
             .then(data => {
                 if (data.length > 0) {
                     const nextAudioId = data[0].videoId;
-                    const nextAudioUrl = `https://paxsenixjs.deno.dev/download?id=${nextAudioId}&type=audio`;
+                    const nextAudioUrl = `https://antara-in.deno.dev/download?id=${nextAudioId}&type=audio`;
                     const nextThumbnailUrl = data[0].thumbnail;
 
                     audioSource.src = nextAudioUrl;

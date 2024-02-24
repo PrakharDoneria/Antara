@@ -58,8 +58,8 @@ document.addEventListener("DOMContentLoaded", function () {
     const author = urlParams.get('author');
 
     if (audioId) {
-        const audioUrl = `https://antara-in.deno.dev/download?id=${audioId}&type=audio`;
-        const thumbnailUrl = `https://antara-in.deno.dev/thumbnailHD?id=${audioId}`;
+        const audioUrl = `https://youtube-data.deno.dev/download?id=${audioId}&type=audio`;
+        const thumbnailUrl = `https://youtube-data.deno.dev/thumbnailHD?id=${audioId}`;
 
         audioSource.src = audioUrl;
         audioThumbnail.src = thumbnailUrl;
@@ -97,7 +97,7 @@ document.addEventListener("DOMContentLoaded", function () {
             .then(data => {
                 if (data.length > 0) {
                     const nextAudioId = data[0].videoId;
-                    const nextAudioUrl = `https://antara-in.deno.dev/download?id=${nextAudioId}&type=audio`;
+                    const nextAudioUrl = `https://youtube-data.deno.dev/download?id=${nextAudioId}&type=audio`;
                     const nextThumbnailUrl = data[0].thumbnail;
 
                     audioSource.src = nextAudioUrl;

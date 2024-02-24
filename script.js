@@ -74,7 +74,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     getCountryCode()
         .then(countryCode => {
-            const url = `https://antara.deno.dev/home?gl=${countryCode}`;
+            const url = `https://antara-in.deno.dev/home?gl=${countryCode}`;
             const greeting = getGreeting();
             document.querySelector(".heading").textContent = greeting;
 
